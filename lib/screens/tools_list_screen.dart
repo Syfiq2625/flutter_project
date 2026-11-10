@@ -22,34 +22,72 @@ class ToolsListScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Consumer<ToolProvider>(
-        builder: (context, provider, child) {
-          if (provider.isLoading) {
-            return const Center(child: CircularProgressIndicator());
-          }
+      body: Column(
+        children: [
+          // Bagian Pencarian dan Filter
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SearchBar(
+                  hintText: 'Cari nama alat atau kategori...',
+                  leading: const Icon(Icons.search),
+                  onSubmitted: (value) => context.read<ToolProvider>().setSearchQuery(value),
+                ),
+                const SizedBox(height: 12),
+                Wrap(
+                  spacing: 8.0,
+                  children: [
+                    FilterChip(
+                      label: const Text('Tersedia'),
+                      selected: context.watch<ToolProvider>().activeFilter == 'available',
+                      onSelected: (_) => context.read<ToolProvider>().setFilter('available'),
+                    ),
+                    FilterChip(
+                      label: const Text('Perlu Diperbaiki'),
+                      selected: context.watch<ToolProvider>().activeFilter == 'repair',
+                      onSelected: (_) => context.read<ToolProvider>().setFilter('repair'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
           
-          if (provider.errorMessage.isNotEmpty) {
-            return Center(
-              child: Text('Error: ${provider.errorMessage}', 
-              style: const TextStyle(color: Colors.red))
-            );
-          }
+          // Bagian Daftar Data (Tabel / ListView)
+          Expanded(
+            child: Consumer<ToolProvider>(
+              builder: (context, provider, child) {
+                if (provider.isLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                
+                if (provider.errorMessage.isNotEmpty) {
+                  return Center(
+                    child: Text('Error: ${provider.errorMessage}', 
+                    style: const TextStyle(color: Colors.red))
+                  );
+                }
 
-          if (provider.tools.isEmpty) {
-            return const Center(child: Text('Tidak ada data alat.'));
-          }
+                if (provider.tools.isEmpty) {
+                  return const Center(child: Text('Data tidak ditemukan.'));
+                }
 
-          // Menggunakan LayoutBuilder dengan breakpoint 600
-          return LayoutBuilder(
-            builder: (context, constraints) {
-              if (constraints.maxWidth >= 600) {
-                return _buildDesktopTable(provider.tools);
-              } else {
-                return _buildMobileList(provider.tools);
-              }
-            },
-          );
-        },
+                // Menggunakan LayoutBuilder dengan breakpoint 600
+                return LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (constraints.maxWidth >= 600) {
+                      return _buildDesktopTable(provider.tools);
+                    } else {
+                      return _buildMobileList(provider.tools);
+                    }
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -99,7 +137,8 @@ class ToolsListScreen extends StatelessWidget {
   // Tampilan untuk layar lebar (>= 600px) menggunakan DataTable
   Widget _buildDesktopTable(List<Tool> tools) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 16.0, bottom: 100.0),
+      // Padding bawah 100 agar tombol FAB tidak tertutup dock navigasi
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0, top: 0.0, bottom: 100.0),
       child: SizedBox(
         width: double.infinity,
         child: Card(

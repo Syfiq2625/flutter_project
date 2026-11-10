@@ -8,9 +8,10 @@ class ApiService {
   // Gunakan localhost karena Laragon berjalan di komputer yang sama
   static const String baseUrl = 'http://localhost/lab_api';
 
-  Future<List<Tool>> fetchTools() async {
+  Future<List<Tool>> fetchTools({String query = '', String filter = ''}) async {
     try {
-      final response = await http.get(Uri.parse('$baseUrl/tools.php'));
+      final url = '$baseUrl/tools.php?search=${Uri.encodeComponent(query)}&filter=${Uri.encodeComponent(filter)}';
+      final response = await http.get(Uri.parse(url));
 
       if (response.statusCode == 200) {
         final Map<String, dynamic> decoded = json.decode(response.body);
