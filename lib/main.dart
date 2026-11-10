@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/tool_provider.dart';
 import 'layout/responsive_scaffold.dart';
+import 'providers/summary_provider.dart';
 
 void main() {
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => ToolProvider()..loadTools()),
+        ChangeNotifierProvider(create: (_) => SummaryProvider()..loadSummary()),
       ],
       child: const LabApp(),
     ),
