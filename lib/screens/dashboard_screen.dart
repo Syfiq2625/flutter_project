@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/summary_provider.dart';
+import '../providers/theme_provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -25,6 +26,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         title: const Text('Dashboard Ringkasan'),
         actions: [
+          // Tombol Sakelar Dark Mode
+          IconButton(
+            icon: Icon(
+              context.watch<ThemeProvider>().isDarkMode 
+                  ? Icons.light_mode 
+                  : Icons.dark_mode
+            ),
+            onPressed: () => context.read<ThemeProvider>().toggleTheme(),
+          ),
+          // Tombol Refresh yang sudah ada
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: () => context.read<SummaryProvider>().loadSummary(),
