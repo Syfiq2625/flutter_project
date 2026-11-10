@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'providers/tool_provider.dart';
 import 'layout/responsive_scaffold.dart';
 import 'providers/summary_provider.dart';
+import 'providers/loan_provider.dart';
 
 void main() {
   runApp(
@@ -10,6 +11,7 @@ void main() {
       providers: [
         ChangeNotifierProvider(create: (_) => ToolProvider()..loadTools()),
         ChangeNotifierProvider(create: (_) => SummaryProvider()..loadSummary()),
+        ChangeNotifierProvider(create: (_) => LoanProvider()),
       ],
       child: const LabApp(),
     ),

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/tool.dart';
 import '../models/summary.dart';
+import '../models/loan.dart';
 
 class ApiService {
   // Gunakan localhost karena Laragon berjalan di komputer yang sama
@@ -45,6 +46,34 @@ class ApiService {
       }
     } catch (e) {
       throw Exception('Error jaringan: $e');
+    }
+  }
+
+  Future<List<Loan>> fetchLoans() async {
+    try {
+      final response = await http.get(Uri.parse('$baseUrl/loans.php'));
+      if (response.statusCode == 200) {
+        final decoded = json.decode(response.body);
+        if (decoded['success'] == true) {
+          final List<dynamic> data = decoded['data'];
+          return data.map((item) => Loan.fromJson(item)).toList();
+        } else {
+          throw Exception(decoded['message']);
+        }
+      } else {
+        throw Exception('Gagal memuat peminjaman');
+      }
+    } catch (e) {
+      throw Exception('Error: $e');
+    }
+  }
+
+  Future<void> returnLoan(int id) async {
+    try {
+      final response = await http.put(Uri.parse('$baseUrl/loans.php?id=$id'));
+      if (response.statusCode != 200) throw Exception('Gagal mengembalikan alat');
+    } catch (e) {
+      throw Exception('Error: $e');
     }
   }
 }
