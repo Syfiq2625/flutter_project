@@ -76,4 +76,23 @@ class ApiService {
       throw Exception('Error: $e');
     }
   }
+
+  Future<void> createLoan(Map<String, dynamic> loanData) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/loans.php'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(loanData),
+      );
+      
+      final decoded = json.decode(response.body);
+      if (response.statusCode == 200 && decoded['success'] == true) {
+        return; // Sukses
+      } else {
+        throw Exception(decoded['message'] ?? 'Gagal membuat peminjaman');
+      }
+    } catch (e) {
+      throw Exception(e.toString());
+    }
+  }
 }

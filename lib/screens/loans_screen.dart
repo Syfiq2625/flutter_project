@@ -4,6 +4,7 @@ import '../providers/loan_provider.dart';
 import '../providers/tool_provider.dart';
 import '../providers/summary_provider.dart';
 import '../models/loan.dart';
+import 'loan_form_screen.dart';
 
 class LoansScreen extends StatefulWidget {
   const LoansScreen({super.key});
@@ -59,7 +60,11 @@ class _LoansScreenState extends State<LoansScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Buka Form Pinjam Alat Baru
+          // Membuka halaman form peminjaman
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const LoanFormScreen()),
+          );
         },
         child: const Icon(Icons.add),
       ),

@@ -37,4 +37,14 @@ class LoanProvider with ChangeNotifier {
       notifyListeners();
     }
   }
+
+  Future<void> addLoan(Map<String, dynamic> loanData) async {
+    try {
+      await _apiService.createLoan(loanData);
+      await loadLoans(); // Segarkan data setelah sukses
+    } catch (e) {
+      // Lempar error ke UI agar bisa ditampilkan di SnackBar (Validasi Stok dll)
+      throw Exception(e.toString().replaceAll('Exception: ', '')); 
+    }
+  }
 }
